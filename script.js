@@ -69,11 +69,14 @@ async function loadPins() {
     const lat = userPos ? userPos.lat : 37.77;
     const lng = userPos ? userPos.lng : -122.41;
     const queryUrl = `${API_BASE}/locations?lat=${lat}&lng=${lng}&max_distance=1000`;
+    
 
     console.log("🛰️ User location used for loading pins:", { lat, lng });
     console.log("🌐 Fetching from:", queryUrl);
 
     const res = await fetch(queryUrl);
+    const text = await res.text(); 
+    console.log("📄 Raw response text:", text);
 
     console.log("📦 Raw response object:", res);
 

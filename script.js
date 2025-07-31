@@ -1,4 +1,4 @@
-const API_BASE = "https://bb24cb206845.ngrok-free.app";
+const API_BASE = "https://gmap-0emf.onrender.com";
 let map, userPos, directionsService, directionsRenderer;
 let tempLatLng = null;
 let markers = [];
@@ -75,8 +75,6 @@ async function loadPins() {
     console.log("🌐 Fetching from:", queryUrl);
 
     const res = await fetch(queryUrl);
-    const text = await res.text(); 
-    console.log("📄 Raw response text:", text);
 
     console.log("📦 Raw response object:", res);
 

@@ -1,0 +1,36 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.db
+*.env
+*.DS_Store
+
+# FastAPI / Uvicorn logs
+*.log
+
+# VSCode and MacOS
+.vscode/
+.DS_Store
+
+# Tailwind build output
+style.css
+style.css.map
+
+# Environment files
+.env
+.env.*
+
+# IDEs
+.idea/
+*.swp
+
+# OS junk
+Thumbs.db
+ehthumbs.db

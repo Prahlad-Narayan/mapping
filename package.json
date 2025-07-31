@@ -12,5 +12,8 @@
   "dependencies": {
     "express": "^5.1.0",
     "http-proxy-middleware": "^3.0.5"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.1.11"
   }
 }

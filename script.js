@@ -1,4 +1,4 @@
-const API_BASE = "https://gmap-0emf.onrender.com";
+const API_BASE = "https://bb24cb206845.ngrok-free.app/";
 let map, userPos, directionsService, directionsRenderer;
 let tempLatLng = null;
 let markers = [];

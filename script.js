@@ -39,7 +39,7 @@ async function initMap() {
         userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         map.setCenter(userPos);
         addUserMarker(userPos);
-        loadPins();
+        setTimeout(loadPins, 300);
       },
       loadPins
     );
@@ -272,21 +272,17 @@ function showPinDetails(pin) {
   if (userPos) {
     getDirections(userPos, { lat: pin.lat, lng: pin.long });
   }
+
+  document.getElementById("donate-button").onclick = () => {
+    const start = userPos;
+    const dest = { lat: pin.lat, lng: pin.long };
+
+    if (start && dest) {
+      const gmapsURL = `https://www.google.com/maps/dir/?api=1&origin=${start.lat},${start.lng}&destination=${dest.lat},${dest.lng}&travelmode=driving`;
+      window.open(gmapsURL, "_blank");
+    } else {
+      alert("User location or destination not available.");
+    }
+  };
 }
 
-function getDirections(start, end) {
-  directionsService.route(
-    {
-      origin: start,
-      destination: end,
-      travelMode: google.maps.TravelMode.DRIVING
-    },
-    (result, status) => {
-      if (status === "OK") {
-        directionsRenderer.setDirections(result);
-      } else {
-        console.error("Directions failed:", status);
-      }
-    }
-  );
-}

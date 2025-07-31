@@ -35,17 +35,17 @@ async function initMap() {
   // Get user location
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        map.setCenter(userPos);
-        addUserMarker(userPos);
-        setTimeout(loadPins, 300);
-      },
-      loadPins
-    );
-  } else {
-    loadPins();
+  (pos) => {
+    userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+    map.setCenter(userPos);
+    addUserMarker(userPos);
+    setTimeout(loadPins, 300);
+  },
+  (err) => {
+    console.warn("Geolocation failed or denied:", err.message);
+    loadPins(); 
   }
+);
 
   // Click on map to add pin
   map.addListener("click", (e) => openAddPinForm(e.latLng.lat(), e.latLng.lng()));
@@ -59,6 +59,7 @@ async function initMap() {
   });
 
   document.getElementById("save-pin").addEventListener("click", savePin);
+  }
 }
 
 // Load all pins from DB
@@ -148,42 +149,6 @@ function clearMarkers() {
   markers = [];
 }
 
-function addMarker(pin) {
-  try {
-    if (!pin.coordinates || !Array.isArray(pin.coordinates.coordinates)) {
-      console.warn("Skipping pin without valid coordinates:", pin);
-      return;
-    }
-
-    const coords = pin.coordinates.coordinates;
-    const lng = parseFloat(coords[0]);
-    const lat = parseFloat(coords[1]);
-
-    if (isNaN(lat) || isNaN(lng)) {
-      console.warn("Invalid lat/lng, skipping:", pin);
-      return;
-    }
-
-    const marker = new google.maps.Marker({
-      position: { lat: lat, lng: lng },
-      map: map,
-      title: pin.name || "Donation Box",
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 6,
-        fillColor: "#2ecc71",
-        fillOpacity: 1,
-        strokeWeight: 1,
-        strokeColor: "#27ae60"
-      }
-    });
-
-    marker.addListener("click", () => showPinDetails(pin));
-    markers.push(marker);
-  } catch (err) {
-    console.error("Error creating marker for pin:", pin, err);
-  }
-}
 
 
 
@@ -242,26 +207,8 @@ const payload = {
   }
 }
 
+// (Removed unused addMarker function)
 
-// Add a green dot marker for donation boxes
-function addMarker(pin) {
-  const marker = new google.maps.Marker({
-    position: { lat: pin.lat, lng: pin.long },
-    map: map,
-    title: pin.name,
-    icon: {
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: 6,
-      fillColor: "#2ecc71", // Green dot
-      fillOpacity: 1,
-      strokeWeight: 1,
-      strokeColor: "#27ae60"
-    }
-  });
-
-  marker.addListener("click", () => showPinDetails(pin));
-  markers.push(marker);
-}
 
 // Show details + directions
 function showPinDetails(pin) {

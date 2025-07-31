@@ -216,20 +216,26 @@ function showPinDetails(pin) {
   document.getElementById("details-address").textContent = pin.org;
   document.getElementById("pin-details").style.display = "flex";
 
-  if (userPos) {
-    getDirections(userPos, { lat: pin.lat, lng: pin.long });
+  let destLat, destLng;
+
+  // Detect if it's from DB or just added pin
+  if (pin.coordinates && Array.isArray(pin.coordinates.coordinates)) {
+    [destLng, destLat] = pin.coordinates.coordinates; // GeoJSON
+  } else {
+    destLat = pin.lat;
+    destLng = pin.long;
+  }
+
+  if (userPos && destLat && destLng) {
+    getDirections(userPos, { lat: destLat, lng: destLng });
   }
 
   document.getElementById("donate-button").onclick = () => {
-    const start = userPos;
-    const dest = { lat: pin.lat, lng: pin.long };
-
-    if (start && dest) {
-      const gmapsURL = `https://www.google.com/maps/dir/?api=1&origin=${start.lat},${start.lng}&destination=${dest.lat},${dest.lng}&travelmode=driving`;
+    if (userPos && destLat && destLng) {
+      const gmapsURL = `https://www.google.com/maps/dir/?api=1&origin=${userPos.lat},${userPos.lng}&destination=${destLat},${destLng}&travelmode=driving`;
       window.open(gmapsURL, "_blank");
     } else {
       alert("User location or destination not available.");
     }
   };
 }
-

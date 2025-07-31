@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3001";
+const API_BASE = "https://gmap-0emf.onrender.com";
 let map, userPos, directionsService, directionsRenderer;
 let tempLatLng = null;
 let markers = [];

@@ -67,7 +67,7 @@ async function loadPins() {
     const lat = userPos ? userPos.lat : 37.77;
     const lng = userPos ? userPos.lng : -122.41;
 
-    const res = await fetch(`${API_BASE}/locations?lat=${lat}&lng=${lng}&max_distance=10000`);
+    const res = await fetch(`${API_BASE}/locations`);
     const pins = await res.json();
     console.log("Fetched pins from DB:", pins);
 

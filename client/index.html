@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goodwill Donation Box Finder</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Goodwill Donation Box Finder</h1>
+  <div id="map"></div>
+
+  <!-- Add Pin Form -->
+  <div id="form-popup" class="popup">
+    <div class="popup-content">
+      <h2>Add Donation Box</h2>
+      <label>Name:</label>
+      <input type="text" id="box-name" placeholder="Box Name">
+      <label>Organization:</label>
+      <input type="text" id="box-org" placeholder="Org Name">
+      <div class="popup-actions">
+        <button id="save-pin">Save</button>
+        <button id="cancel-pin">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pin Details Modal -->
+  <div id="pin-details" class="popup">
+    <div class="popup-content">
+      <h2 id="details-name">Donation Box</h2>
+      <p id="details-address"></p>
+      <button id="donate-button">Donate</button>
+      <button id="close-details">Close</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCa8xLPVMCIx69ZkyakMVJxe3zao9h2a-8&callback=initMap">
+  </script>
+</body>
+</html>

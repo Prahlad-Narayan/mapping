@@ -64,54 +64,76 @@ async function initMap() {
 // Load all pins from DB
 async function loadPins() {
   try {
+    console.log("📍 loadPins() called");
+
     const lat = userPos ? userPos.lat : 37.77;
     const lng = userPos ? userPos.lng : -122.41;
+    const queryUrl = `${API_BASE}/locations?lat=${lat}&lng=${lng}&max_distance=1000`;
 
-    const res = await fetch(`${API_BASE}/locations`);
+    console.log("🛰️ User location used for loading pins:", { lat, lng });
+    console.log("🌐 Fetching from:", queryUrl);
+
+    const res = await fetch(queryUrl);
+
+    console.log("📦 Raw response object:", res);
+
+    if (!res.ok) {
+      const text = await res.text(); // to log raw body if JSON parse fails
+      console.error("❌ Fetch failed. Status:", res.status, "Body:", text);
+      return;
+    }
+
     const pins = await res.json();
-    console.log("Fetched pins from DB:", pins);
+
+    console.log("✅ JSON parsed successfully:", pins);
 
     clearMarkers();
+    console.log("🧹 Cleared old markers");
 
-    if (Array.isArray(pins)) {
-      pins.forEach(pin => {
-        // ✅ Safely read GeoJSON coordinates
-        if (!pin.coordinates || !Array.isArray(pin.coordinates.coordinates)) {
-          console.warn("Skipping pin without valid coordinates:", pin);
-          return;
-        }
-
-        const coords = pin.coordinates.coordinates;
-        const lng = parseFloat(coords[0]);
-        const lat = parseFloat(coords[1]);
-
-        if (isNaN(lat) || isNaN(lng)) {
-          console.warn("Invalid lat/lng, skipping:", pin);
-          return;
-        }
-
-        const marker = new google.maps.Marker({
-          position: { lat: lat, lng: lng },
-          map: map,
-          title: pin.name || "Donation Box",
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 6,
-            fillColor: "#2ecc71", // Green
-            fillOpacity: 1,
-            strokeWeight: 1,
-            strokeColor: "#27ae60"
-          }
-        });
-
-        marker.addListener("click", () => showPinDetails(pin));
-        markers.push(marker);
-      });
-    } else {
-      console.warn("GET /locations did not return an array:", pins);
+    if (!Array.isArray(pins)) {
+      console.warn("⚠️ Expected array but got:", typeof pins, pins);
+      return;
     }
+
+    pins.forEach((pin, i) => {
+      console.log(`📍 Processing pin ${i + 1}:`, pin);
+
+      if (!pin.coordinates || !Array.isArray(pin.coordinates.coordinates)) {
+        console.warn(`⚠️ Pin ${i + 1} missing valid coordinates:`, pin.coordinates);
+        return;
+      }
+
+      const [lng, lat] = pin.coordinates.coordinates;
+      console.log(`📌 Coordinates for pin ${i + 1}:`, { lat, lng });
+
+      if (isNaN(lat) || isNaN(lng)) {
+        console.warn(`❗ Invalid lat/lng for pin ${i + 1}, skipping`, { lat, lng });
+        return;
+      }
+
+      const marker = new google.maps.Marker({
+        position: { lat, lng },
+        map: map,
+        title: pin.name || "Donation Box",
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 6,
+          fillColor: "#2ecc71",
+          fillOpacity: 1,
+          strokeWeight: 1,
+          strokeColor: "#27ae60"
+        }
+      });
+
+      marker.addListener("click", () => showPinDetails(pin));
+      markers.push(marker);
+      console.log(`✅ Marker for pin ${i + 1} added to map`);
+    });
+
+    console.log("🎉 Finished loading pins");
+
   } catch (err) {
-    console.error("Error loading pins:", err);
+    console.error("💥 Unexpected error in loadPins():", err);
   }
 }
 
